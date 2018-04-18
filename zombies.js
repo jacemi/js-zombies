@@ -8,6 +8,10 @@
  * @property {string} name
  */
 
+ function Item(name){
+   this.name = name;
+ };
+
 
 /**
  * Class => Weapon(name, damage)
@@ -25,13 +29,18 @@
  * @property {number} damage
  */
 
+function Weapon(name, damage){
+  Item.call(this, name);
+  this.damage = damage;
+};
+
 
 /**
  * Weapon Extends Item Class
  * -----------------------------
  */
 
-
+Weapon.prototype = Object.create(Item.prototype);
 
 /**
  * Class => Food(name, energy)
@@ -49,12 +58,17 @@
  * @property {number} energy
  */
 
+ function Food(name, energy){
+   Item.call(this, name);
+   this.energy = energy;
+ };
 
 /**
  * Food Extends Item Class
  * -----------------------------
  */
 
+ Food.prototype = Object.create(Item.prototype);
 
 
 /**
@@ -79,6 +93,25 @@
  * @property {method} getMaxHealth         Returns private variable `maxHealth`.
  */
 
+function Player(name, health, strength, speed){
+  this.name = name;
+  this.health = health;
+  this.strength = strength;
+  this.speed = speed;
+  var _pack = [];
+  var _maxHealth = health;
+  this.isAlive = true;
+  this.equipped = false;
+  Player.prototype.getPack = function (){
+    return _pack;
+  };
+  Player.prototype.getMaxHealth = function (){
+    return _maxHealth;
+  };
+};
+
+
+
 
 /**
  * Player Class Method => checkPack()
@@ -92,6 +125,9 @@
  * @name checkPack
  */
 
+Player.prototype.checkPack = function () {
+  return console.log(this.getPack());
+}
 
 /**
  * Player Class Method => takeItem(item)
@@ -111,6 +147,16 @@
  * @return {boolean} true/false     Whether player was able to store item in pack.
  */
 
+ Player.prototype.takeItem = function (item) {
+  if(this._pack.length < 3){
+    this._pack.push(item);
+    console.log(this.name + ": " + item);
+    return true
+  }else{
+    console.log("The pack is full so the item could not be stored");
+    return false
+  };
+ };
 
 /**
  * Player Class Method => discardItem(item)
@@ -137,6 +183,18 @@
  * @param {Item/Weapon/Food} item   The item to discard.
  * @return {boolean} true/false     Whether player was able to remove item from pack.
  */
+
+Player.prototype.discardItem = function (item) {
+  let itemIndex = this._pack.indexOf(item);
+  if(itemIndex !== -1){
+    this._pack.splice(itemIndex, 1);
+    console.log(this.name + ": " + item.name + ": " + "this item was discarded.");
+    return true
+  }else{
+    console.log("nothing was discarded since the item could not be found.");
+    return false
+  };
+};
 
 
 /**
@@ -224,6 +282,17 @@
  * @property {number} speed
  * @property {boolean} isAlive      Default value should be `true`.
  */
+
+function Zombie(health, strength, speed){
+  this.health = health;
+  this.strength = strength;
+  this.speed = speed; 
+  var _maxHealth = health;
+  this.isAlive = true; 
+  Zombie.prototype.getMaxHealth = function(){
+    return _maxHealth
+  };
+}
 
 
 /**
